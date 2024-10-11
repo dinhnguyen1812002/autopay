@@ -40,11 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'api'=>[
-            'driver' => 'jwt',  // Change 'token' to 'jwt'
+        'api' => [
+            'driver' => 'token',  // Change 'token' to 'jwt'
             'provider' => 'users',
             'hash' => false,
-        ]
+        ],
     ],
 
     /*
