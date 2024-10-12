@@ -2,58 +2,59 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Data\LoginData;
 use App\Data\UserData;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(UserData $userData)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $userData->name,
+            'email' => $userData->email,
+            'password' => Hash::make($userData->password),
         ]);
-
-        $user->assignRole('user');
 
         Auth::login($user);
-
-        return response()->json(UserData::from($user), 201);
+        return response()->json(
+            [
+            'message' => 'Register successfully',
+        ],
+            Response::HTTP_CREATED
+        );
     }
 
-    public function login(Request $request)
+    public function login(LoginData $data)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Invalid login details'], 401);
+        // Attempt to log the user in using the provided credentials
+        if (!Auth::attempt([
+            'email' => $data->email,
+            'password' => $data->password,
+        ])) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
         }
 
-        $user = User::where('email', $request->email)->firstOrFail();
-        $token = $user->createToken('auth_token')->plainTextToken;
-        return response()->json([
-            'token' => $token,
-            'message' => 'Logged in successfully',
-        ], 201);
-    }
+        // Retrieve the authenticated user
+        $user = Auth::user();
 
-    public function logout(Request $request)
+        // Create a token for the user (you can customize the token name)
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        // Return the token along with a success message
+        return response()->json([
+            'message' => 'Login successful!',
+            'token' => $token,
+        ], Response::HTTP_OK);
+    }
+    public function logout(UserData $request)
     {
         // Xóa token hiện tại của user
         $request->user()->currentAccessToken()->delete();

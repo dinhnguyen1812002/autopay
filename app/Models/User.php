@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -8,14 +9,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-
 class User extends Authenticatable
 {
-
-    use HasApiTokens, HasFactory, Notifiable, HasUlids, HasRoles;
-    protected $keyType = 'string'; // Đặt kiểu khóa chính
-
-    public $incrementing = false; // Không tự động tăng
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+    use HasUlids;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
