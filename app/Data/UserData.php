@@ -2,6 +2,8 @@
 
 namespace App\Data;
 
+use Spatie\LaravelData\Attributes\Validation\Image;
+use Spatie\LaravelData\Attributes\Validation\Mimes;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Attributes\Validation\Email;
 use Spatie\LaravelData\Attributes\Validation\Required;
@@ -12,8 +14,6 @@ use Spatie\LaravelData\Attributes\Validation\StringType;
 class UserData extends Data
 {
     public function __construct(
-        //        #[Required, StringType]
-        //        public string $id,
         #[Required, StringType]
         public string $name,
         #[Required, Email]
@@ -21,12 +21,15 @@ class UserData extends Data
         #[Required, StringType]
         public string $password,
         #[Nullable, StringType]
-        public ?string $email_verified_at,
+        public ?string $email_verified_at = null,
+
+        //        #[Nullable, Image, Mimes('jpg', 'jpeg', 'png')]
+        //        public ?string $avatar = null,
+
         #[ArrayType]
         public array $roles = [],
+        #[ArrayType]
+        public array $permissions = [],
     ) {
     }
-
-
-
 }

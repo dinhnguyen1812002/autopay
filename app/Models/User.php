@@ -23,9 +23,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'password', 'avatar', 'is_active'
     ];
 
     /**
@@ -51,6 +49,23 @@ class User extends Authenticatable
         ];
     }
 
+    //    public function assignRoles($roles)
+    //    {
+    //        $this->syncRoles($roles);
+    //    }
+    //    public function assignPermissions($permissions)
+    //    {
+    //        $this->syncPermissions($permissions);
+    //    }
+    //    public function hasAnyRole($roles): bool
+    //    {
+    //        return $this->hasRole($roles);
+    //    }
+    //
+    //    public function hasAnyPermission($permissions): bool
+    //    {
+    //        return $this->hasPermissionTo($permissions);
+    //    }
 
 
 

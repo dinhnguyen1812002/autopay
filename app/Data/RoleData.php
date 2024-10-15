@@ -2,7 +2,13 @@
 
 namespace App\Data;
 
-class RoleData
-{
+use Spatie\LaravelData\Data;
 
+class RoleData extends Data
+{
+    public function __construct(
+        public string $name,
+        public ?array $permissions,
+    ) {
+    }
 }
