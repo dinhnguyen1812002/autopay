@@ -16,7 +16,6 @@ class UserController extends Controller
 {
     public function store(UserData $userData, Request $request)
     {
-
         if (!Auth::user()->hasRole('super-admin')) {
             return response()->json(['message' => 'Unauthorized.'], Response::HTTP_UNAUTHORIZED);
         }
@@ -51,5 +50,6 @@ class UserController extends Controller
             'user' => $user->load('roles', 'permissions'),
         ], Response::HTTP_CREATED);
     }
+
 
 }
