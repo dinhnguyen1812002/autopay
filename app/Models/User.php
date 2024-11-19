@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Agency\Agency;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -66,7 +67,9 @@ class User extends Authenticatable
     //    {
     //        return $this->hasPermissionTo($permissions);
     //    }
-
-
+    public function agency()
+    {
+        return $this->belongsTo(Agency::class);
+    }
 
 }

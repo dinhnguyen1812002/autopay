@@ -21,4 +21,5 @@ class UpdateUserData extends Data
         public ?string $avatar = null
     ) {
     }
+
 }

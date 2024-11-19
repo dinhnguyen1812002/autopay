@@ -11,9 +11,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
-            $table->string('avatar')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->foreignUlid('agency_id')->nullable()->constrained('agencies')->onDelete('cascade');
         });
     }
 
@@ -24,8 +22,6 @@ return new class () extends Migration {
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->dropColumn('avatar');
-            $table->dropColumn('is_active');
         });
     }
 };

@@ -30,6 +30,8 @@ class UserData extends Data
         public array $roles = [],
         #[ArrayType]
         public array $permissions = [],
+        #[Nullable, StringType]
+        public ?string $avatarUrl = null,  // New avatarUrl field
     ) {
     }
 }

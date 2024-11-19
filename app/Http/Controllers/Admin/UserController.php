@@ -14,6 +14,38 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
+    public function index()
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'User not logged in.'], Response::HTTP_UNAUTHORIZED);
+        }
+        if (!Auth::user()->hasRole('super-admin')) {
+            return response()->json(['message' => 'Unauthorized.'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $users = User::with(['roles', 'permissions'])->get()->map(function ($user) {
+            $avatarUrl = $user->avatar
+                ? asset('storage/' . $user->avatar)
+                : asset('storage/avatars/default_avatar.png');
+
+            return new UserData(
+                name: $user->name,
+                email: $user->email,
+                password: '',
+                email_verified_at: $user->email_verified_at,
+                roles: $user->roles->pluck('name')->toArray(),
+                permissions: $user->permissions->pluck('name')->toArray(),
+                avatarUrl: $avatarUrl
+            );
+        });
+
+
+        return response()->json([
+            'message' => 'List of all users',
+            'users' => $users,
+        ], Response::HTTP_OK);
+    }
+
     public function store(UserData $userData, Request $request)
     {
         if (!Auth::user()->hasRole('super-admin')) {
@@ -24,8 +56,9 @@ class UserController extends Controller
         $avatarPath = null;
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        } else {
+            $avatarPath = './storage/avatars/default_avatar.png';
         }
-
         // Tạo người dùng mới
         $user = User::create([
             'name' => $userData->name,
@@ -50,6 +83,4 @@ class UserController extends Controller
             'user' => $user->load('roles', 'permissions'),
         ], Response::HTTP_CREATED);
     }
-
-
 }
